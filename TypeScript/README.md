@@ -51,6 +51,7 @@ Vue 프로젝트 - TypeScript 사용법 : `vue add typescript`
 [2. 타입 확정](#타입-확정)
 [3. 긴 타입 지정](#긴-타입-지정)
 [4. 타입 한정](#타입-한정)
+[5. HTML 조작](#html-조작)
 
 ## 기본 타입
 
@@ -362,3 +363,89 @@ function 필터함수(전화번호: string, 함수1: 함수타입1, 함수2: 함
 
 console.log(필터함수('010-1111-2222', cutZero, removeDash)); // 1011112222
 ```
+
+## HTML 조작
+
+[typescriptDOMManupulation.ts](./HTML조작/typescriptDOMManupulation.ts)
+
+```html
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>HTML 조작</title>
+  </head>
+  <body>
+    <h4 id="title">안녕하세요</h4>
+    <a href="naver.com">링크</a>
+    <button id="button">버튼</button>
+    <img id="image" src="test.jpg" />
+    <a class="naver" href="naver.com">링크</a>
+    <a class="naver" href="naver.com">링크</a>
+    <a class="naver" href="naver.com">링크</a>
+    <script src="./typescriptDOMManupulation.js"></script>
+  </body>
+</html>
+```
+
+- 1번 방법 : 조건문 narrowing
+
+```typescript
+let 제목 = document.querySelector('#title');
+if (제목 != null) 제목.innerHTML = '반갑소';
+```
+
+- **2번 방법 : instanceof narrowing : 정확한 타입 체크**
+
+```typescript
+let 제목 = document.querySelector('#title');
+if (제목 instanceof HTMLElement) 제목.innerHTML = '반갑소';
+```
+
+```typescript
+let 버튼 = document.getElementById('button');
+if (버튼 instanceof HTMLButtonElement) {
+  버튼.addEventListener('click', function () {
+    console.log('안녕');
+  });
+}
+```
+
+```typescript
+let 이미지 = document.getElementById('image');
+if (이미지 instanceof HTMLImageElement) {
+  이미지.src = 'new.jpg';
+}
+
+let 링크들 = document.querySelectorAll('.naver');
+링크들.forEach(링크 => {
+  if (링크 instanceof HTMLAnchorElement) 링크.href = 'https://kakao.com';
+});
+```
+
+- 3번 방법 : assertion : 임시용
+
+```typescript
+let 제목 = document.querySelector('#title') as HTMLElement;
+제목.innerHTML = '반갑소';
+```
+
+- 4번 방법 : optional chaining 연산자 `?.`
+
+```typescript
+let 제목 = document.querySelector('#title');
+if (제목?.innerHTML != undefined) 제목.innerHTML = '반갑소';
+```
+
+- 4.5번 방법 : Nullish coalescing operator(널 병합 연산자) `??`
+
+```typescript
+let 제목 = document.querySelector('#title');
+console.log(제목?.innerHTML ?? '제목을 못가져왔어요');
+```
+
+HTML 태그 종류별로 정확한 타입명칭이 있다.  
+a 태그는 HTMLAnchorElement  
+img 태그는 HTMLImageElement  
+h4 태그는 HTMLHeadingElement
