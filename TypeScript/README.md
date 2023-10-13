@@ -52,6 +52,7 @@ Vue 프로젝트 - TypeScript 사용법 : `vue add typescript`
 [3. 긴 타입 지정](#긴-타입-지정)
 [4. 타입 한정](#타입-한정)
 [5. HTML 조작](#html-조작)
+[6. 클래스 타입](#클래스-타입)
 
 ## 기본 타입
 
@@ -449,3 +450,78 @@ HTML 태그 종류별로 정확한 타입명칭이 있다.
 a 태그는 HTMLAnchorElement  
 img 태그는 HTMLImageElement  
 h4 태그는 HTMLHeadingElement
+
+## 클래스 타입
+
+[classExample.js](./클래스타입/classExample.js)  
+[classTypes.ts](./클래스타입/classTypes.ts)  
+[JavaScript `class`, `prototype` 문법]
+
+```javascript
+class Hero {
+  constructor(q, w) {
+    // this : 함수로부터 생성되는 object를 가리킴. 동의어로 instance가 있음.
+    this.q = q;
+    this.w = w;
+  }
+}
+let nunu = new Hero('consume', 'snowball');
+let garen = new Hero('strike', 'courage');
+
+// prototype : 유전자.
+// prototype chain : 본인부터 부모, 부모의 부모... 까지 자료가 나올 때까지 탐색함.
+Hero.prototype.job = 'hero';
+console.log(nunu.job); // hero
+
+// 동일한 코드
+var 배열 = [4, 2, 1];
+var 배열 = new Array(4, 2, 1);
+
+// 위 코드는 array prototype에 존재하는 sort() 함수를 사용할 수 있다.
+배열.sort();
+```
+
+**[TypeScript `class` 문법]**  
+필드가 미리 정의되어 있어야 constructor 안에서도 사용이 가능하다.
+
+```typescript
+class Car {
+  // 필드
+  model: string;
+  price: number;
+  constructor(model: string, price: number) {
+    this.model = model;
+    this.price = price;
+  }
+  tax(): number {
+    return this.price * 0.1;
+  }
+}
+
+let car1 = new Car('소나타', 3000);
+console.log(car1); // Car {model: '소나타', price: 3000}
+console.log(car1.tax()); // 300
+```
+
+```typescript
+class Word {
+  num: number[];
+  str: string[];
+  constructor(...param: (number | string)[]) {
+    let nums: number[] = [];
+    let strs: string[] = [];
+
+    param.forEach(v => {
+      if (typeof v === 'number') nums.push(v);
+      else strs.push(v);
+    });
+
+    this.num = nums;
+    this.str = strs;
+  }
+}
+
+let obj2 = new Word('kim', 3, 5, 'park');
+console.log(obj2.num); // [3, 5]
+console.log(obj2.str); // ['kim', 'park']
+```
