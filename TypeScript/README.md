@@ -50,6 +50,7 @@ Vue 프로젝트 - TypeScript 사용법 : `vue add typescript`
 [1. 기본 타입](#기본-타입)
 [2. 타입 확정](#타입-확정)
 [3. 긴 타입 지정](#긴-타입-지정)
+[4. 타입 한정](#타입-한정)
 
 ## 기본 타입
 
@@ -249,4 +250,115 @@ type과 interface를 & 기호로 교차해서 사용도 가능하다.
 type Animals = { name: string };
 type Cat = { name: number } & Animals; // & 기호로 엮을 때는 에러 발생하지 않음.
 let 야옹: Cat = { name: 'kim' }; // never 타입으로 에러 발생.
+```
+
+## 타입 한정
+
+### Literal Type
+
+[literalType.ts](./타입한정/literalType.ts)  
+**Literal Type : 특정 글자나 숫자만 가질 수 있게 제한을 두는 타입**
+
+- 엄격한 타입 지정
+- 자동완성 힌트
+
+```typescript
+let 위: 'top';
+let 아래: 'bottom';
+let 좌우: 'left' | 'right';
+좌우 = 'left';
+function f_sex(sex: '남' | '여'): 1 | 0 | -1 {
+  if (sex === '남') return 1;
+  else if (sex === '여') return 0;
+  else return -1;
+}
+```
+
+#### object 문법에서 Literal Type 지정하는 방법
+
+1. object 만들 때 타입을 미리 지정 : object마다 타입을 다르게 작성해줘야 함.
+2. Assertion 으로 `as '문자열'` 형태로 지정
+3. **object 자료에 `as const` 문법 붙이기** : `as const` 하나로 통일해서 작성 가능함.
+   - object value 값을 그대로 타입으로 지정해줌
+   - object 안에 있는 모든 속성을 readonly로 바꿔줌
+
+```typescript
+let 자료: { name: 'kim' } = {
+  name: 'kim',
+};
+
+let 자료3 = {
+  name: 'kim',
+} as const;
+
+function 함수(값: 'kim') {} // kim이라는 타입만 들어올 수 있다.
+
+함수(자료.name);
+함수(자료3.name);
+```
+
+### Method Type
+
+[methodType.ts](./타입한정/methodType.ts)
+
+#### type alias에 함수 type 저장해서 사용하는 방법 : **함수표현식** 사용
+
+```typescript
+type 함수타입 = (값: string) => number;
+let 함수표현식: 함수타입 = function (str) {
+  return 0;
+};
+```
+
+#### object 안의 함수 타입지정하는 방법
+
+```typescript
+type Member = {
+  name: string;
+  age: number;
+  plusOne: (v: number) => number;
+  minusAge: () => number;
+  changeName: (v: string) => void;
+};
+
+let 회원정보: Member = {
+  name: 'kim',
+  age: 25,
+  plusOne(v: number): number {
+    return v + 1;
+  },
+  minusAge(): number {
+    return --this.age;
+  },
+  changeName: v => {
+    console.log(v);
+  },
+};
+
+회원정보.minusAge();
+console.log(회원정보.age); // 24
+```
+
+```typescript
+type CutType = (x: string) => string;
+
+let cutZero: CutType = function (x) {
+  let result = x.replace(/^0+/, '');
+  return result;
+};
+function removeDash(x: string): number {
+  let result = x.replace(/-/g, '');
+  return parseFloat(result);
+}
+```
+
+```typescript
+type 함수타입1 = (값: string) => string;
+type 함수타입2 = (값: string) => number;
+
+function 필터함수(전화번호: string, 함수1: 함수타입1, 함수2: 함수타입2) {
+  return 함수2(함수1(전화번호));
+}
+
+console.log(필터함수('010-1111-2222', cutZero, removeDash)); // 1011112222
 ```
