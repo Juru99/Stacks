@@ -5,6 +5,7 @@
 [1장. 빅오 표기법](#1장-빅오-표기법)
 [2장. 자바스크립트 특징](#2장-자바스크립트-특징)
 [3장. 자바스크립트 숫자](#3장-자바스크립트-숫자)
+[4장. 자바스크립트 문자열](#4장-자바스크립트-문자열)
 
 ## 1장. 빅오 표기법
 
@@ -192,4 +193,237 @@ function modularExponentiation(base, exponent, modulus) {
   }
   return value;
 }
+```
+
+## 4장. 자바스크립트 문자열
+
+[예제](<./Chapter4(Strings).js>)
+
+### 문자열 함수
+
+#### 1. 문자열 접근 : `.charAt(index)`, `.subString(startIndex[, endIndex])`
+
+#### 2. 문자열 비교 : `>`, `<`
+
+#### 3. 문자열 검색 : `.startsWith('문자열')`, `.endsWith('문자열')`
+
+**indexOf(searchValue[, fromIndex])**
+
+- 일치하는 문자열을 발견하지 못한 경우 `-1`이 반환된다
+- 대소문자 구분
+
+```javascript
+// 어떤 문자열 내에 특정 문자열이 존재하는지 확인
+function existsInString(stringValue, search) {
+  return stringValue.indexOf(search) !== -1;
+}
+console.log(existsInString('red', 'r')); // prints 'true';
+console.log(existsInString('red', 'b')); // prints 'false';
+```
+
+```javascript
+var str = "He's my king from this day until his last day",
+  count = 0,
+  pos = str.indexOf('a');
+
+// str.indexOf('a')가 while에 걸려서 문자열의 끝까지 도는 것
+while (pos !== -1) {
+  console.log(pos); // pos = 24 38 43
+  count++;
+  pos = str.indexOf('a', pos + 1);
+}
+console.log(count); // prints '3'
+```
+
+#### 4. 문자열 분해 : `.split(separator)`
+
+> 하나의 매개변수(분리자)를 입력받아 부분 문자열 배열을 생성한다.
+
+#### 5. 문자열 바꾸기 : `.replace(string, replaceString)`
+
+> 문자열 변수 내에 특정 문자열을 다른 문자열로 대체한다.
+
+##### 정규 표현식 : 검색 패턴을 정의한 문자열들의 집합
+
+- **선택 매개변수 일치 관련 설정**
+  - i : 대소문자를 구분하지 않고 일치하는 문자열을 검색한다.
+  - g : 전역적으로 일치하는 문자열을 검색한다(일치하는 문자열을 처음 발견한 이후 멈추는 대신 모든 일치하는 문자열을 찾는다.)
+  - m : 다중열 문자열에 대해서도 일치하는 문자열을 검색한다.
+- **기본 객체 RegExp**
+  - `문자열.search(검색문자열)` : 문자열 내에 일치하는 문자열을 찾는다. 일치하는 문자열의 인덱스를 반환한다. 일치하지 않으면 `-1` 반환
+  - `문자열.match(검색문자열)` : 일치하는 문자열을 찾는다. 문자열이 일치하면 검색 문자열을 반환한다. 일치하지 않으면 `null` 반환
+  - `정규표현식.exec(문자열)` : 문자열 내에 일치하는 문자열을 찾는다. 일치하는 첫 번째 문자열을 반환한다.
+  - `정규표현식.test(문자열)` : 문자열 내에 일치하는 문자열을 찾는다. true 또는 false를 반환한다.
+- **기본 정규 표현식**
+  - `^` : 문자열/줄의 시작을 나타낸다.
+  - `\d` : 모든 숫자를 찾는다.
+  - `[abc]` : 괄호 내의 모든 문자를 찾는다.
+  - `[^abc]` : 괄호 내의 문자들을 제외한 모든 문자를 찾는다.
+  - `[0-9]` : 괄호 내의 모든 숫자를 찾는다.
+  - `[^0-9]` : 괄호 내의 숫자들을 제외한 모든 문자를 찾는다.
+  - `(x|y)` : x 또는 y를 찾는다.
+- **자주 사용하는 정규 표현식**
+  - `/\d+/` : 숫자를 포함하는 문자
+  - `/^\d+$/` : 숫자만 포함하는 문자
+  - `/^[0-9]*.[0-9]*[1-9]+$/` : 부동소수점 문자
+  - `/[a-zA-Z0-9]/` : 숫자와 알파벳만 포함하는 문자
+- **질의 문자열** : `/([^?=&]+)(=([^&]*))/`
+  - 웹 애플리케이션에서 웹 URL은 대개 경로 찾기나 데이터베이스의 질의 목적의 매개변수를 포함한다.
+
+```javascript
+// SELECT LCD, TV FROM database WHERE Category = 4 AND Product_id = 2140;
+var uri =
+  'http://your.domain/product.aspx?category=4&product_id=2140&query=lcd+tv';
+var queryString = {};
+uri.replace(new RegExp('([^?=&]+)(=([^&]*))?', 'g'), function ($0, $1, $2, $3) {
+  queryString[$1] = $3; // $1은 속성, $3은 값 기준
+  console.log(`$0 : ${$0}`); // $0은 '?', '&' 기준
+  console.log(`$2 : ${$2}`); // $2는 '=' 기준
+  console.dir(`queryString : ${queryString}`);
+});
+console.log('ID: ' + queryString['product_id']); // ID: 2140
+console.log('Name: ' + queryString['product_name']); // Name: undefined
+console.log('Category: ' + queryString['category']); // Category: 4
+```
+
+### 인코딩
+
+> 컴퓨터 과학 분야에서 효율적인 전송 혹은 저장을 위해 문자들을 특수 포맷으로 표현하는 포괄적인 개념  
+> 모든 컴퓨터 파일 유형은 특정 구조로 인코딩된다.
+
+#### Base64 인코딩
+
+> `btoa()` : 문자열로부터 Base64 인코딩된 ASCII 문자열을 생성한다. 문자열의 각 문자는 바이트로 취급된다.  
+> `atob()` : Base64 인코딩을 사용해 인코딩된 자료의 문자열을 디코딩한다.
+
+```javascript
+console.log(btoa('hello I love learning to computer program'));
+console.log(atob('aGVsbG8gSSBsb3ZlIGxlYXJuaW5nIHRvIGNvbXB1dGVyIHByb2dyYW0'));
+```
+
+### 문자열 단축
+
+Bit.ly와 같은 단축 URL을 지닌 사이트가 동작하는 방법 : 단순화된 URL 압축 알고리즘 사용
+
+1. 데이터베이스가 URL에 대해 정수 기반 고유 ID를 생성한다.
+2. 정수 ID는 인코딩되어 문자열로 단축된다.
+
+### 암호화
+
+> TLS : 서버와 클라이언트 간에 암호화된 연결을 수립하기 위한 표준 보안 기술
+
+SSL 경고 메시지 - 브라우저와 서버 간에 데이터가 암호화되지 않을 수도 있음을 의미.
+
+1. 서버는 브라우저에게 자신의 비대칭 공개 키를 전송한다.
+2. 브라우저는 현재 세션을 위한 대칭 키를 생성한다. 해당 대칭 키는 서버의 비대칭 공개 키로 암호화된다.
+3. 서버는 자신의 비밀 키로 브라우저의 세션을 복호화해 세션 키를 추출한다.
+4. 이제 두 시스템 모두 세션 키를 가지고 있어 세션 키를 사용해 자료를 안전하게 전송한다.
+
+#### RSA - 가장 널리 사용되는 공개 키 암호화 알고리즘
+
+> RSA : 큰 정수의 인수분해 난이도에 기반한 암호화 알고리즘
+
+- 두 개의 큰 소수와 보조 값이 공개 키로 생성된다.
+- 누구나 메시지를 암호화하기 위해 공개 키를 사용할 수 있지만 소인수를 지닌 사람만이 메시지를 해독할 수 있다.
+
+1. 키 생성 : 공개 키와 비밀 키가 생성된다. 생성된 키 생성 방법 역시 비밀이어야 한다.
+2. 암호화 : 공개 키를 통해 비밀 메시지를 암호화할 수 있다.
+3. 복호화 : 비밀 키로만 암호화된 메시지를 복호화할 수 있다.
+
+##### RSA 알고리즘
+
+1. 두 개의 소수 p와 q를 선택한다. 대개 큰 소수를 선택한다.
+
+- p와 q의 곱을 n이라고 표기한다.
+- `(p-1)`과 `(q-1)`의 곱을 phi라고 표기한다.
+
+2. 두 개의 지수 e와 d를 선택한다.
+
+- e는 일반적으로 3이다. 2보다 큰 다른 값을 사용할 수 있다.
+- d는 `(e * d) % phi = 1`인 값이다.
+
+```javascript
+// RSA 알고리즘
+function modInverse(e, phi) {
+  var m0 = phi,
+    t,
+    q;
+  var x0 = 0,
+    x1 = 1;
+
+  if (phi == 1) return 0;
+
+  while (e > 1) {
+    // q는 몫이다.
+    q = Math.floor(e / phi);
+
+    t = phi;
+
+    // 여기서 phi는 나머지다.
+    // 유클리드 알고리즘과 동일하게 수행된다.
+    (phi = e % phi), (e = t);
+
+    t = x0;
+
+    x0 = x1 - q * x0;
+
+    x1 = t;
+  }
+
+  // x1을 양수로 만든다.
+  if (x1 < 0) x1 += m0;
+
+  return x1;
+}
+modInverse(7, 40); // 23
+
+function isPrime(n) {
+  if (n <= 1) {
+    return false;
+  }
+
+  // check from 2 to n-1
+  for (var i = 2; i < n; i++) {
+    if (n % i == 0) {
+      return false;
+    }
+  }
+  return true;
+}
+
+function RSAKeyPair(p, q) {
+  // p와 q가 소수인지 확인해야 한다.
+  if (!(isPrime(p) && isPrime(q))) return;
+
+  // p와 q가 동일하지 않다는 것을 확인해야 한다.
+  if (p == q) return;
+
+  var n = p * q,
+    phi = (p - 1) * (q - 1),
+    e = 3,
+    d = modInverse(e, phi);
+
+  // Public key: [e,n], Private key: [d,n]
+  return [
+    [e, n],
+    [d, n],
+  ];
+}
+```
+
+## 가정
+
+for 조건 왼쪽 제곱 : sqrt
+for 변경 곱하기 : log
+while % : log
+
+```javascript
+/*
+i * i -> sqrt
+n -> n
+i = i * 2 -> log
+*/
+for(let i = 0; i * i < n; i = i * 2)
+
+while(number % divisor == 0) // log
 ```
