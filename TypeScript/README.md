@@ -48,6 +48,7 @@ Vue 프로젝트 - TypeScript 사용법 : `vue add typescript`
 ## 목차
 
 [1. 기본 타입](#기본-타입)
+[2. 타입 확정](#타입-확정)
 
 ## 기본 타입
 
@@ -137,4 +138,40 @@ let 여기넣어: string = 모두;
 // -에러 발생-
 let 여기넣어: number = 모두안전;
 모두안전 - 1;
+```
+
+## 타입 확정
+
+[NarrowingAssertion.ts](./타입확정/NarrowingAssertion.ts)  
+[homework.ts](./타입확정/homework.ts)  
+Narrowing : 조건문으로 타입을 하나로 결정하는 방법
+
+> typeof 변수명  
+> 속성명 in 오브젝트자료  
+> 인스턴스 instanceof 부모
+
+Assertion : as 키워드로 임시로 타입을 해제하는 방법
+
+> 변수명 as type
+
+1. 임시로 에러해결용으로 사용 (타입을 a에서 b로 변경하는 용도가 아님)
+2. 어떤 타입이 들어올 지 명확히 알고 있지만 컴파일러 에러가 방해할 때 사용
+
+일반적으로 Narrowing을 조건문으로 하고 버그 추적이 어려운 as는 사용하지 않는다.  
+as는 비상용으로 사용한다.
+
+```typescript
+function Narrowing(x: number | string) {
+  let array: number[] = [];
+  if (typeof x === 'number') array[0] = x;
+}
+
+function Assertion(x: number | string) {
+  let array: number[] = [];
+  array[0] = x as number;
+}
+
+// 옛날 as 문법
+let name2: unknown = 'kim';
+<number>name2;
 ```
