@@ -1,0 +1,140 @@
+# TypeScript
+
+타입스크립트 설치 : `npm install -g typescript`  
+ts 파일을 읽을 수 없는 웹브라우저를 위한 ts -> js 컴파일 명령어 : `tsc -w`  
+`tsconfig.json` : ts -> js 컴파일시 옵션 설정
+
+- "target" : 자바스크립트 버전
+- "module" : commonjs 문법 또는 import 문법 중 선택
+- "noImplicitAny" : any라는 타입이 의도치 않게 발생할 경우 에러 표시
+- "strictNullChecks" : null, undefined 타입에 조작을 시도하면 에러 표시
+
+이외 쓸만한 설정들
+
+```json
+{
+  "compilerOptions": {
+    "target": "es5", // 'es3', 'es5', 'es2015', 'es2016', 'es2017','es2018', 'esnext' 가능
+    "module": "commonjs", //무슨 import 문법 쓸건지 'commonjs', 'amd', 'es2015', 'esnext'
+    "allowJs": true, // js 파일들 ts에서 import해서 쓸 수 있는지
+    "checkJs": true, // 일반 js 파일에서도 에러체크 여부
+    "jsx": "preserve", // tsx 파일을 jsx로 어떻게 컴파일할 것인지 'preserve', 'react-native', 'react'
+    "declaration": true, //컴파일시 .d.ts 파일도 자동으로 함께생성 (현재쓰는 모든 타입이 정의된 파일)
+    "outFile": "./", //모든 ts파일을 js파일 하나로 컴파일해줌 (module이 none, amd, system일 때만 가능)
+    "outDir": "./", //js파일 아웃풋 경로바꾸기
+    "rootDir": "./", //루트경로 바꾸기 (js 파일 아웃풋 경로에 영향줌)
+    "removeComments": true, //컴파일시 주석제거
+
+    "strict": true, //strict 관련, noimplicit 어쩌구 관련 모드 전부 켜기
+    "noImplicitAny": true, //any타입 금지 여부
+    "strictNullChecks": true, //null, undefined 타입에 이상한 짓 할시 에러내기
+    "strictFunctionTypes": true, //함수파라미터 타입체크 강하게
+    "strictPropertyInitialization": true, //class constructor 작성시 타입체크 강하게
+    "noImplicitThis": true, //this 키워드가 any 타입일 경우 에러내기
+    "alwaysStrict": true, //자바스크립트 "use strict" 모드 켜기
+
+    "noUnusedLocals": true, //쓰지않는 지역변수 있으면 에러내기
+    "noUnusedParameters": true, //쓰지않는 파라미터 있으면 에러내기
+    "noImplicitReturns": true, //함수에서 return 빼먹으면 에러내기
+    "noFallthroughCasesInSwitch": true //switch문 이상하면 에러내기
+  }
+}
+```
+
+React 프로젝트 - TypeScript 사용법 : `npm install --save typescript @types/node @types/react @types/react-dom @types/jest`  
+또는 `npx create-react-app my-app --template typescript`
+Vue 프로젝트 - TypeScript 사용법 : `vue add typescript`
+
+## 목차
+
+[1. 기본 타입](#기본-타입)
+
+## 기본 타입
+
+[primitiveTypes.ts](./기본타입/primitiveTypes.ts)  
+[homework.ts](./기본타입/homework.ts)
+
+> 타입 : `string, number, boolean, null, undefined, bigint, [], {} 등`  
+> 타입 지정 팁 : 변수 생성시 타입스크립트가 타입을 자동으로 부여한다. (타입지정 문법 생략가능)
+
+```typescript
+let 변수명: string = '값';
+
+let 배열명: string[] = ['값1', '값2'];
+
+let 오브젝트명: { name: string } = { name: 'kim' };
+
+// ? : 값이 없어도 에러가 발생하지 않는 옵션
+let 오브젝트명2: { name?: string } = {};
+
+let 문자열또는숫자: string | number = 1234;
+
+// 타입을 변수로 저장할 때 작명을 대문자로 시작한다.
+// Union Type(|) : 2개 이상의 타입을 동시에 사용한다.
+type LongType = string | string[];
+let 문자열또는문자열배열: LongType = 'String';
+let nums: (number | string)[] = [1, '2', 3];
+let obj: { a: string | number } = { a: '123' };
+
+// 함수는 파라미터와 반환값에 타입을 지정할 수 있다.
+// 연산 시, 타입이 정확하지 않으면 에러가 발생한다.
+// void : 반환값이 없을 때 사용
+// 파라미터의 타입이 지정된 경우, 매개변수는 필수로 넣어줘야 한다.
+function add(a: number, b: number | string): number {
+  if (typeof b === 'number') return a + b;
+}
+function print1(name: string): void {
+  console.log('안녕하세요' + name);
+}
+// ?: : 파라미터가 옵션인 경우
+// name?: string === name?: (string | undefined)
+function print2(name?: string): void {
+  console.log('안녕하세요' + name);
+}
+print1('Juru');
+print2();
+
+// tuple 타입
+type TupleType = [string, boolean];
+let Juru99: TupleType = ['Juru99', true];
+
+// index signature : 모든 key와 value가 string, string 외 새롭게 추가 불가능.
+type ObjectAllType = {
+  sex?: string;
+  [key: string]: string;
+};
+let Juru: ObjectAllType = { name: 'Juru', age: '24' };
+
+// class 타입
+class User {
+  name: string;
+  constructor(name: string) {
+    this.name = name;
+  }
+}
+
+// any 타입 : 타입 해제 문법
+/*
+일반 js 변수만드는 방법
+타입 관련 버그가 발생해도 에러나지 않음
+*/
+let 모두: any;
+모두 = 123;
+모두 = [];
+모두 = {};
+
+// unknown 타입 : 모든 자료형 허용
+let 모두안전: unknown;
+모두안전 = 123;
+모두안전 = [];
+
+// -문제 없음-
+let 여기넣어: string = 모두;
+모두 - 1;
+
+// 타입스크립트는 간단한 수학연산도 타입이 맞아야한다.
+// unknown은 number 타입이 아니다.
+// -에러 발생-
+let 여기넣어: number = 모두안전;
+모두안전 - 1;
+```
