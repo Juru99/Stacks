@@ -1,13 +1,13 @@
 # TypeScript
 
-타입스크립트 설치 : `npm install -g typescript`  
-ts 파일을 읽을 수 없는 웹브라우저를 위한 ts -> js 컴파일 명령어 : `tsc -w`  
-`tsconfig.json` : ts -> js 컴파일시 옵션 설정
+타입스크립트 설치 : **`npm install -g typescript`**  
+ts 파일을 읽을 수 없는 웹브라우저를 위한 ts -> js 컴파일 명령어 : **`tsc -w`**  
+**`tsconfig.json`** : ts -> js 컴파일시 옵션 설정
 
-- "target" : 자바스크립트 버전
-- "module" : commonjs 문법 또는 import 문법 중 선택
-- "noImplicitAny" : any라는 타입이 의도치 않게 발생할 경우 에러 표시
-- "strictNullChecks" : null, undefined 타입에 조작을 시도하면 에러 표시
+- **"target"** : 자바스크립트 버전
+- **"module"** : commonjs 문법 또는 import 문법 중 선택
+- **"noImplicitAny"** : any라는 타입이 의도치 않게 발생할 경우 에러 표시
+- **"strictNullChecks"** : null, undefined 타입에 조작을 시도하면 에러 표시
 
 이외 쓸만한 설정들
 
@@ -53,13 +53,14 @@ Vue 프로젝트 - TypeScript 사용법 : `vue add typescript`
 - [4. 타입 한정](#타입-한정)
 - [5. HTML 조작](#html-조작)
 - [6. 클래스 타입](#클래스-타입)
+- [7. rest Parameter & spread Operator](#rest-parameter--spread-operator)
 
 ## 기본 타입
 
 [primitiveTypes.ts](./기본타입/primitiveTypes.ts)  
 [homework.ts](./기본타입/homework.ts)
 
-> 타입 : `string, number, boolean, null, undefined, bigint, [], {} 등`  
+> **타입** : `string, number, boolean, null, undefined, bigint, [], {} 등`  
 > 타입 지정 팁 : 변수 생성시 타입스크립트가 타입을 자동으로 부여한다. (타입지정 문법 생략가능)
 
 ```typescript
@@ -148,15 +149,15 @@ let 여기넣어: number = 모두안전;
 
 [NarrowingAssertion.ts](./타입확정/NarrowingAssertion.ts)  
 [homework.ts](./타입확정/homework.ts)  
-Narrowing : 조건문으로 타입을 하나로 결정하는 방법
+**Narrowing** : 조건문으로 타입을 하나로 결정하는 방법
 
-> typeof 변수명  
-> 속성명 in 오브젝트자료  
-> 인스턴스 instanceof 부모
+> **typeof** 변수명  
+> 속성명 **in** 오브젝트자료  
+> 인스턴스 **instanceof** 부모
 
-Assertion : as 키워드로 임시로 타입을 해제하는 방법
+**Assertion** : as 키워드로 임시로 타입을 해제하는 방법
 
-> 변수명 as type
+> 변수명 **as** type
 
 1. 임시로 에러해결용으로 사용 (타입을 a에서 b로 변경하는 용도가 아님)
 2. 어떤 타입이 들어올 지 명확히 알고 있지만 컴파일러 에러가 방해할 때 사용
@@ -185,7 +186,7 @@ let name2: unknown = 'kim';
 ### typeAlias
 
 [typeAlias.ts](./긴타입지정/typeAlias.ts)  
-typeAlias : `type 키워드` 사용하여 긴 타입 지정
+**typeAlias** : `type 키워드` 사용하여 긴 타입 지정
 type의 속성앞에 `readonly`를 붙여 object 자료의 수정을 막을 수 있다.
 
 ```typescript
@@ -216,7 +217,7 @@ let 좌표: XandY = { x: 1, y: 2 };
 ### interface
 
 [interface.ts](./긴타입지정/interface.ts)  
-extends로 type을 상속할 수 있다.
+**extends**로 type을 상속할 수 있다.
 
 ```typescript
 interface Student {
@@ -242,11 +243,11 @@ type과 interface를 & 기호로 교차해서 사용도 가능하다.
 
 ### type과 interface의 차이점
 
-- interface는 중복선언 가능 : 선언한 모든 타입이 합쳐짐.
+- **interface**는 중복선언 가능 : 선언한 모든 타입이 합쳐짐.
   - 외부 라이브러리의 경우 interface를 많이 사용.
   - 다른 사람이 많이 이용할 것 같으면 object 타입 정할 때 interface 사용
   - 중복속성이 있으면 에러 발생.
-- type은 중복선언 불가능
+- **type**은 중복선언 불가능
 
 ```typescript
 type Animals = { name: string };
@@ -455,7 +456,7 @@ h4 태그는 HTMLHeadingElement
 
 [classExample.js](./클래스타입/classExample.js)  
 [classTypes.ts](./클래스타입/classTypes.ts)  
-[JavaScript `class`, `prototype` 문법]
+**[JavaScript `class`, `prototype` 문법]**
 
 ```javascript
 class Hero {
@@ -525,3 +526,14 @@ let obj2 = new Word('kim', 3, 5, 'park');
 console.log(obj2.num); // [3, 5]
 console.log(obj2.str); // ['kim', 'park']
 ```
+
+## rest Parameter & spread Operator
+
+[restParameter.ts](./rest%20&%20spread/restParameter.ts)  
+[spreadOperator.ts](./rest%20&%20spread/spreadOperator.ts)
+
+> **rest** : 특정할 수 없는 여러 개의 파라미터를 의미하며 함수의 파라미터로 사용된다.
+
+- rest 파라미터는 항상 배열로 반환된다.
+
+> **spread** : `...array`, `...object` 와 같이 자료 왼쪽에 붙어 괄호를 벗겨준다.
