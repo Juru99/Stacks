@@ -54,6 +54,7 @@ Vue 프로젝트 - TypeScript 사용법 : `vue add typescript`
 - [5. HTML 조작](#html-조작)
 - [6. 클래스 타입](#클래스-타입)
 - [7. rest Parameter & spread Operator](#rest-parameter--spread-operator)
+- [8. destructuring](#destructuring)
 
 ## 기본 타입
 
@@ -537,3 +538,66 @@ console.log(obj2.str); // ['kim', 'park']
 - rest 파라미터는 항상 배열로 반환된다.
 
 > **spread** : `...array`, `...object` 와 같이 자료 왼쪽에 붙어 괄호를 벗겨준다.
+
+## destructuring
+
+[destructuring.ts](./destructuring/destructuring.ts)
+
+> 배열이나 객체에서 원하는 값 또는 속성을 추출하거나 할당하는 방법을 간결하게 표현할 수 있게 해주는 문법입니다.  
+> 코드를 더 간결하고 가독성 있게 만들어주며, 객체 또는 배열에서 필요한 데이터를 추출할 때 특히 유용합니다.
+
+```typescript
+// 배열 Destructuring:
+// 필요 없는 요소를 무시하기 위해 빈 쉼표(,)를 사용할 수도 있습니다.
+const numbers: number[] = [1, 2, 3, 4, 5];
+const [first, second, , fourth] = numbers;
+
+console.log(first); // 1
+console.log(second); // 2
+console.log(fourth); // 4
+
+// 객체 Destructuring:
+const person: { firstName: string; lastName: string } = {
+  firstName: 'John',
+  lastName: 'Doe',
+};
+const { firstName, lastName } = person;
+
+console.log(firstName); // 'John'
+console.log(lastName); // 'Doe'
+
+// 기본값 할당:
+// 객체나 배열 destructuring에서 원하는 속성이나 요소가 존재하지 않는 경우 기본값을 설정할 수 있습니다.
+const person2: { firstName2: string; lastName2?: string } = {
+  firstName2: 'John',
+};
+const { firstName2, lastName2 = 'Doe' } = person2;
+
+console.log(firstName2); // 'John'
+console.log(lastName2); // 'Doe'
+```
+
+**[시나리오 문제]**
+
+```typescript
+// 돈 계산
+// 10원, 50원, 100원, 500원, 1000원, 5000원, 10000원, 50000원
+// 함수에 금액을 입력하면 결과물을 오브젝트 형식으로 반환한다.
+let money: { [key: string]: number } = {};
+function moneyChanger(amount: number, change: number): {} {
+  let smallChange = amount % change;
+  money[`${change}`] = ~~(amount / change);
+  if (smallChange) {
+    while (smallChange < change) {
+      let firstNum = `${change}`.substring(0, 1);
+      if (firstNum === '5') change /= 5;
+      else if (firstNum === '1') change /= 2;
+    }
+    moneyChanger(smallChange, change);
+  }
+
+  return money;
+}
+
+console.log(moneyChanger(57370, 10000)); // {10: 2, 50: 1, 100: 3, 1000: 2, 5000: 1, 10000: 5}
+```
