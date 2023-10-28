@@ -7,11 +7,14 @@
 - [3장. 자바스크립트 숫자](#3장-자바스크립트-숫자)
 - [4장. 자바스크립트 문자열](#4장-자바스크립트-문자열)
 - [5장. 자바스크립트 배열](#5장-자바스크립트-배열)
+- [7장. 자바스크립트 메모리 관리](#7장-자바스크립트-메모리-관리)
+- [8장. 자바스크립트 재귀](#8장-재귀)
+- [9장. 자바스크립트 집합](#9장-집합)
 - [부록. 추가 정리](#추가-정리)
 
 ## 1장. 빅오 표기법
 
-[예제](<./Chapter1(Big-O%20Notation).js>)
+[./Chapter1(Big-O%20Notation).js 예제](<./Chapter1(Big-O%20Notation).js>)
 
 > 빅오 표기법은 알고리즘의 최악의 경우 복잡도를 측정한다.  
 > 빅오 표기법에서 n은 입력의 개수를 나타낸다.
@@ -40,7 +43,7 @@ O(∞) : 무한 루프 (ex) `while(true)`
 
 ## 2장. 자바스크립트 특징
 
-[예제](<./Chapter2(UniqueParts).js>)
+[./Chapter2(UniqueParts).js 예제](<./Chapter2(UniqueParts).js>)
 
 > `var` : 변수를 어디서(블록 내부) 선언하든 함수의 맨 앞으로 이동한다.  
 > 단, false인 조건문은 건너 뛴다.
@@ -55,7 +58,7 @@ O(∞) : 무한 루프 (ex) `while(true)`
 
 ## 3장. 자바스크립트 숫자
 
-[예제](<./Chapter3(Numbers).js>)
+[./Chapter3(Numbers).js 예제](<./Chapter3(Numbers).js>)
 
 > 자바스크립트의 모든 숫자는 64비트 부동소수점 형태이다.  
 > 십진분수로 인해 자바스크립트에서 부동소수점 체계가 반올림 오류를 일으킬 수 있다.
@@ -199,7 +202,7 @@ function modularExponentiation(base, exponent, modulus) {
 
 ## 4장. 자바스크립트 문자열
 
-[예제](<./Chapter4(Strings).js>)
+[./Chapter4(Strings).js 예제](<./Chapter4(Strings).js>)
 
 ### 문자열 함수
 
@@ -344,78 +347,9 @@ SSL 경고 메시지 - 브라우저와 서버 간에 데이터가 암호화되�
 - e는 일반적으로 3이다. 2보다 큰 다른 값을 사용할 수 있다.
 - d는 `(e * d) % phi = 1`인 값이다.
 
-```javascript
-// RSA 알고리즘
-function modInverse(e, phi) {
-  var m0 = phi,
-    t,
-    q;
-  var x0 = 0,
-    x1 = 1;
-
-  if (phi == 1) return 0;
-
-  while (e > 1) {
-    // q는 몫이다.
-    q = Math.floor(e / phi);
-
-    t = phi;
-
-    // 여기서 phi는 나머지다.
-    // 유클리드 알고리즘과 동일하게 수행된다.
-    (phi = e % phi), (e = t);
-
-    t = x0;
-
-    x0 = x1 - q * x0;
-
-    x1 = t;
-  }
-
-  // x1을 양수로 만든다.
-  if (x1 < 0) x1 += m0;
-
-  return x1;
-}
-modInverse(7, 40); // 23
-
-function isPrime(n) {
-  if (n <= 1) {
-    return false;
-  }
-
-  // check from 2 to n-1
-  for (var i = 2; i < n; i++) {
-    if (n % i == 0) {
-      return false;
-    }
-  }
-  return true;
-}
-
-function RSAKeyPair(p, q) {
-  // p와 q가 소수인지 확인해야 한다.
-  if (!(isPrime(p) && isPrime(q))) return;
-
-  // p와 q가 동일하지 않다는 것을 확인해야 한다.
-  if (p == q) return;
-
-  var n = p * q,
-    phi = (p - 1) * (q - 1),
-    e = 3,
-    d = modInverse(e, phi);
-
-  // Public key: [e,n], Private key: [d,n]
-  return [
-    [e, n],
-    [d, n],
-  ];
-}
-```
-
 ## 5장. 자바스크립트 배열
 
-[예제](<./Chapter5(Arrays).js>)
+[./Chapter5(Arrays).js 예제](<./Chapter5(Arrays).js>)
 
 ### 1. 삽입 : 새로운 항목을 배열 내에 추가하는 것
 
@@ -487,6 +421,37 @@ function RSAKeyPair(p, q) {
 1. 동적 함수 호출: `apply()`를 사용하면 함수를 동적으로 호출할 수 있습니다. 함수의 이름이나 인자의 개수를 런타임에 결정할 수 있습니다.
 2. `this` 값 설정: `apply()`를 사용하여 함수 내에서 `this` 값을 지정할 수 있습니다. 이것은 객체 지향 프로그래밍에서 메서드 호출과 관련이 있습니다.
 3. 배열을 함수의 인자로 전달: 배열을 사용하여 함수에 여러 인자를 전달할 수 있으며, 함수 내에서 이를 처리할 수 있습니다.
+
+## 7장. 자바스크립트 메모리 관리
+
+[./Chapter7(MemoryManagement).js 설명](<./Chapter7(MemoryManagement).js>)
+
+## 8장. 재귀
+
+[./Chapter8(Recursion).js 예제](<./Chapter8(Recursion).js>)
+
+> 재귀는 기저 조건과 분할 정복 방식으로 구성된다.
+
+- 기저(종료) 조건: 재귀 메소드는 자기 자신을 호출하기 때문에 기저 조건에 도달하지 않으면 계속 자기 자신을 호출한다. 재귀로 인한 스택 오버플로는 올바른 기저 조건을 갖추지 못한 결과일 가능성이 매우 높다. 기저 조건에서는 더 이상 재귀함수 호출을 하지 않는다.
+- 분할 정복 방식: 어떤 문제를 작은 단위로 나눠서 해당 작은 단위의 문제들을 모두 해결함으로써 문제를 해결하는 것을 말한다.
+
+  - 분할 정복에 의해 점점 작아지면서 기저 조건에 도달해야 한다.
+
+- 재귀 알고리즘의 빅오 분석은 마스터 정리를 통해 수행된다.
+  - 점화식: `T(n) = aT(n/b) + O(n^c)`, 조건: `a >= 1, b >= 1`
+    - `a: 재귀 호출에 곱해지는 계수`, `b: 재귀 호출 시에 n을 나누는 로그항`, `c: 등식의 비재귀 구성 요소에 대한 다항식의 항`
+  - 해당 경우가 마스터 정리의 3가지 중 어디에 속하는지 결정하기 위해 a와 b, c를 식별해야 한다.
+    - 첫 번째 경우: `c < logb(a)`이면 `O(n^(logb(a)))`이다.
+    - 두 번째 경우: `c < logb(a)`이면 `T(n) = O(n^c log(n))`이다.
+    - 세 번째 경우: `c > logb(a)`이면 `T(n) = O(f(n))`이다.
+- 재귀 알고리즘을 구현할 때 재귀함수 호출의 콜 스택으로 인한 추가적인 메모리를 고려해야 한다. 각 재귀 호출은 실행 시간에 콜 스택에서의 공간을 필요로 한다. 콜 스택이 n 호출만큼 축적된 경우 해당 함수의 공간 복잡도는 `O(n)`이다.
+
+## 9장. 집합
+
+[./Chapter9(Sets).js 설명](<./Chapter9(Sets).js>)
+
+- 집합의 구현은 해시 테이블의 구현을 기초로 한다.
+- `Set` 객체는 `size` 속성 하나만이 존재한다.
 
 ## 추가 정리
 
